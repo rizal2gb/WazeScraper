@@ -3,15 +3,11 @@ using System;
 
 namespace WazeScraper.Models
 {
-    public class WazeAlert
+    public class WazeAlert : DbAlert
     {
         public string ReportBy { get; }
-        public string Country { get; }
         public bool Inscale { get; }
         public bool IsJamUnifiedAlert { get; }
-        public int ReportRating { get; set; }
-        public int Confidence { get; set; }
-        public int Reliability { get; set; }
         public int NImages { get; }
         public string Type { get; }
         public Guid Uuid { get; }
@@ -21,23 +17,18 @@ namespace WazeScraper.Models
         public int RoadType { get; }
         public int Magvar { get; }
         public bool ShowFacebookPic { get; }
-        public string Subtype { get; }
-        public string City { get; }
         public string Street { get; }
         public string AdditionalInfo { get; }
         public string WazeData { get; }
         public string ReportDescription { get; }
-        public string Id { get; }
-        public Location Location { get; }
-        public ulong PubMillis { get; }
 
         [JsonConstructor]
         public WazeAlert(string reportBy, string country, bool inscale, bool isJamUnifiedAlert, int reportRating, int confidence, int reliability, int nImages, string type,
                          Guid uuid, string nearBy, int speed, int reportMood, int roadType, int magvar, bool showFacebookPic, string subtype, string street,
-                         string additionalInfo, string wazeData, string reportDescription, string id, Location location, ulong pubMillis, string city)
+                         string additionalInfo, string wazeData, string reportDescription, string id, Location location, ulong pubMillis, string city) :
+                        base(id, location, country, city, reportRating, confidence, reliability, subtype, pubMillis)
         {
             ReportBy = reportBy;
-            Country = country;
             Inscale = inscale;
             IsJamUnifiedAlert = isJamUnifiedAlert;
             ReportRating = reportRating;
@@ -52,15 +43,10 @@ namespace WazeScraper.Models
             RoadType = roadType;
             Magvar = magvar;
             ShowFacebookPic = showFacebookPic;
-            Subtype = subtype;
             Street = street;
             AdditionalInfo = additionalInfo;
             WazeData = wazeData;
             ReportDescription = reportDescription;
-            Id = id;
-            Location = location;
-            PubMillis = pubMillis;
-            City = city;
         }
     }
 }

@@ -42,5 +42,11 @@ namespace WazeScraper.Models
             PubMillis = alert.PubMillis;
         }
 
+        public string InsertToDatabaseString()
+        {
+            return "INSERT INTO `LT-police` (`id`, `X`, `Y`, `Country`, `City`, `ReportRating`, `Confidence`, `Reliability`, `subtype`, `published`) " +
+                   $"VALUES ({Id}, {Location.X}, {Location.Y}, {Country}, {City}, {ReportRating}, {Confidence}, {Reliability}, {Subtype}, {PubMillis})";
+        }
+
     }
 }
