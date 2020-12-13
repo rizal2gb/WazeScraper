@@ -22,18 +22,19 @@ namespace WazeScraper.Models
         public int Magvar { get; }
         public bool ShowFacebookPic { get; }
         public string Subtype { get; }
+        public string City { get; }
         public string Street { get; }
         public string AdditionalInfo { get; }
         public string WazeData { get; }
         public string ReportDescription { get; }
-        public string ID { get; }
+        public string Id { get; }
         public Location Location { get; }
         public ulong PubMillis { get; }
 
         [JsonConstructor]
         public WazeAlert(string reportBy, string country, bool inscale, bool isJamUnifiedAlert, int reportRating, int confidence, int reliability, int nImages, string type,
                          Guid uuid, string nearBy, int speed, int reportMood, int roadType, int magvar, bool showFacebookPic, string subtype, string street,
-                         string additionalInfo, string wazeData, string reportDescription, string id, Location location, ulong pubMillis)
+                         string additionalInfo, string wazeData, string reportDescription, string id, Location location, ulong pubMillis, string city)
         {
             ReportBy = reportBy;
             Country = country;
@@ -56,9 +57,10 @@ namespace WazeScraper.Models
             AdditionalInfo = additionalInfo;
             WazeData = wazeData;
             ReportDescription = reportDescription;
-            ID = id;
+            Id = id;
             Location = location;
             PubMillis = pubMillis;
+            City = city;
         }
     }
 }
