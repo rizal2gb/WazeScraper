@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Net;
+using WazeScraper.Utils;
 
 namespace WazeScraper
 {
+    [AppScope(Scope.SingleInstance)]
     public class ApiClient
     {
         public string Get(HttpWebRequest request)
