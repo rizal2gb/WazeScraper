@@ -25,7 +25,7 @@ namespace WazeScraper.Models
         [JsonConstructor]
         public WazeAlert(string reportBy, string country, bool inscale, bool isJamUnifiedAlert, int reportRating, int confidence, int reliability, int nImages, string type,
                          Guid uuid, string nearBy, int speed, int reportMood, int roadType, int magvar, bool showFacebookPic, string subtype, string street,
-                         string additionalInfo, string wazeData, string reportDescription, string id, Location location, ulong pubMillis, string city) :
+                         string additionalInfo, string wazeData, string reportDescription, string id, Location location, long pubMillis, string city) :
                         base(id, location, country, city, reportRating, confidence, reliability, subtype, pubMillis)
         {
             ReportBy = reportBy;

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using System;
 
 namespace WazeScraper.Models
 {
@@ -12,11 +14,11 @@ namespace WazeScraper.Models
         public int Confidence { get; set; }
         public int Reliability { get; set; }
         public string Subtype { get; }
-        public ulong PubMillis { get; }
+        public long PubMillis { get; }
 
         [JsonConstructor]
         public DbAlert(string id, Location location, string country, string city, int reportRating,
-                       int confidence, int reliability, string subtype, ulong pubMillis)
+                       int confidence, int reliability, string subtype, long pubMillis)
         {
             Id = id;
             Location = location;
@@ -42,10 +44,27 @@ namespace WazeScraper.Models
             PubMillis = alert.PubMillis;
         }
 
-        public string InsertToDatabaseString()
+        /// <summary>
+        /// NOTE: this might get deprecated due to the usage of ApiClient methods
+        /// Takes in DbAlert Object and converts it MySqlCommand used to insert to database
+        /// </summary>
+        /// <returns>return insert sql command for the object</returns>
+        public MySqlCommand InsertToDatabaseCommandCreate()
         {
-            return "INSERT INTO `LT-police` (`id`, `X`, `Y`, `Country`, `City`, `ReportRating`, `Confidence`, `Reliability`, `subtype`, `published`) " +
-                   $"VALUES ({Id}, {Location.X}, {Location.Y}, {Country}, {City}, {ReportRating}, {Confidence}, {Reliability}, {Subtype}, {PubMillis})";
+            MySqlCommand command = new MySqlCommand(Constants.InsertQuery);
+
+            command.Parameters.AddWithValue("@id", Id);
+            command.Parameters.AddWithValue("@X", Location.X);
+            command.Parameters.AddWithValue("@Y", Location.Y);
+            command.Parameters.AddWithValue("@Country", Country);
+            command.Parameters.AddWithValue("@City", City);
+            command.Parameters.AddWithValue("@ReportRating", ReportRating);
+            command.Parameters.AddWithValue("@Confidence", Confidence);
+            command.Parameters.AddWithValue("@Reliability", Reliability);
+            command.Parameters.AddWithValue("@Subtype", Subtype);
+            command.Parameters.AddWithValue("@published", DateTimeOffset.FromUnixTimeMilliseconds(PubMillis).DateTime);
+
+            return command;
         }
 
     }

@@ -24,5 +24,11 @@
         public const string SearchedType = "POLICE";
         #endregion
 
+        #region SQL
+        public const string InsertQuery = "INSERT INTO `LT-police` (id, X, Y, Country, City, ReportRating, Confidence, Reliability, subtype, published) VALUES";
+
+
+        #endregion
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Linq;
 
 namespace WazeScraper
@@ -17,17 +18,25 @@ namespace WazeScraper
                 var alerts = JsonHelper.DeserializeResponse(response);
                 var cops = alerts.Where(x => x.Type == "POLICE");
 
-                //string cs = @"server=88.119.198.18;userid=rent_AmSlab;password=pass;database=rent_AmSlab";
+                string cs = @"server=88.119.198.18;userid=rent_AmSlab;password=password;database=rent_AmSlab";
 
-                //using var con = new MySqlConnection(cs);
-                //con.Open();
+                using var con = new MySqlConnection(cs);
+                con.Open();
+                try
+                {
+                    apiClient.InsertPayloadCommand(alerts, con);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
                 Console.WriteLine("Works as expected");
             }
             catch (Exception e)
             {
                 Console.WriteLine("this sucks");
                 Console.WriteLine(e);
-                throw;
             }
 
         }
