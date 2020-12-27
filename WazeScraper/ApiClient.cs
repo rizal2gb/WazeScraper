@@ -24,11 +24,11 @@ namespace WazeScraper
             }
         }
 
-        public async void InsertPayloadCommand(List<WazeAlert> alerts, MySqlConnection connection)
+        public async void InsertPayloadCommand(List<WazeAlert> alerts)
         {
             StringBuilder insertValues = new StringBuilder("");
             int size = alerts.Count;
-
+            using (MySqlConnection con = new MySqlConnection(Constants.CS))
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 for (int i = 0; i < size; i++)
@@ -53,12 +53,41 @@ namespace WazeScraper
                     }
                 }
 
-                cmd.Connection = connection;
+                cmd.Connection = con;
                 cmd.CommandText = $"{Constants.InsertQuery}{insertValues}";
+                con.Open();
                 await cmd.ExecuteNonQueryAsync();
+                con.Close();
             }
         }
 
+        public HashSet<string> SelectKnownIdsCommand()
+        {
+            HashSet<string> knownIds = new HashSet<string>();
+            using var con = new MySqlConnection(Constants.CS);
+            try
+            {
+                con.Open();
+                MySqlCommand command = new MySqlCommand("SELECT * FROM `LT-police`", con);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
 
+                        knownIds.Add(reader["Id"].ToString());
+                    }
+                }
+
+                return knownIds;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
     }
 }

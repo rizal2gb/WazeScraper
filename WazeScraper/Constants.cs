@@ -25,6 +25,7 @@
         #endregion
 
         #region SQL
+        public const string CS = @"server=88.119.198.18;userid=rent_AmSlab;password=pass;database=rent_AmSlab";
         public const string InsertQuery = "INSERT INTO `LT-police` (id, X, Y, Country, City, ReportRating, Confidence, Reliability, subtype, published) VALUES";
 
 

@@ -1,5 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace WazeScraper
@@ -17,14 +16,10 @@ namespace WazeScraper
                 var response = apiClient.Get(request);
                 var alerts = JsonHelper.DeserializeResponse(response);
                 var cops = alerts.Where(x => x.Type == "POLICE");
-
-                string cs = @"server=88.119.198.18;userid=rent_AmSlab;password=password;database=rent_AmSlab";
-
-                using var con = new MySqlConnection(cs);
-                con.Open();
+                var test = apiClient.SelectKnownIdsCommand();
                 try
                 {
-                    apiClient.InsertPayloadCommand(alerts, con);
+                    apiClient.InsertPayloadCommand(alerts);
                 }
                 catch (Exception e)
                 {
