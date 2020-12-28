@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using WazeScraper.Helpers;
 using WazeScraper.Models;
@@ -14,6 +13,8 @@ namespace WazeScraper
         private readonly ApiClient _apiClient;
         private bool _runLoop;
 
+        public bool IsRunning => _runLoop;
+
         public Scraper(ApiClient apiClient)
         {
             _apiClient = apiClient;
@@ -22,6 +23,7 @@ namespace WazeScraper
         public void Start()
         {
             _runLoop = true;
+            Console.WriteLine("Running...");
             RunLoop();
         }
 
@@ -34,6 +36,7 @@ namespace WazeScraper
         {
             while (_runLoop)
             {
+                Console.WriteLine("Delaying task for 15 seconds...");
                 await Task.Delay(15000); // waits 15 seconds
                 try
                 {
@@ -52,6 +55,7 @@ namespace WazeScraper
 
         public List<WazeAlert> GetListOfAlertsByType(int x_start, int x_end, int y_start, int y_end, string type)
         {
+            Console.WriteLine("Starting Task...");
             var startTime = DateTime.Now;
             List<WazeAlert> wantedAlerts = new List<WazeAlert>();
 
@@ -83,7 +87,7 @@ namespace WazeScraper
             }
 
             var endTime = DateTime.Now;
-            Debug.WriteLine($"Task took: {endTime - startTime}");
+            Console.WriteLine($"Task finished, it took: {endTime - startTime}");
 
             return wantedAlerts;
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using WazeScraper.Helpers;
 
 namespace WazeScraper
 {
@@ -13,7 +12,8 @@ namespace WazeScraper
                 AutofacInitializer.Initialize();
                 var scraper = AutofacInitializer.GetInstance<Scraper>();
                 scraper.Start();
-                Console.WriteLine("Running ;)");
+                while (scraper.IsRunning) { }
+
             }
             catch (Exception e)
             {
