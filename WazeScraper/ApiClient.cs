@@ -26,6 +26,9 @@ namespace WazeScraper
 
         public async void InsertPayloadCommand(List<WazeAlert> alerts)
         {
+            if (alerts == null || alerts.Count == 0)
+                return;
+
             StringBuilder insertValues = new StringBuilder("");
             int size = alerts.Count;
             using (MySqlConnection con = new MySqlConnection(Constants.CS))
@@ -49,18 +52,23 @@ namespace WazeScraper
 
                     if (i < size - 1)
                     {
-                        insertValues.Append(",");
+                        insertValues.Append(", ");
                     }
                 }
 
                 cmd.Connection = con;
-                cmd.CommandText = $"{Constants.InsertQuery}{insertValues}";
+                cmd.CommandText = $"{Constants.InsertQuery}{insertValues}{Constants.OnDuplicateQuery}";
                 con.Open();
                 await cmd.ExecuteNonQueryAsync();
                 con.Close();
             }
         }
 
+        /// <summary>
+        /// NOTE: we are not using this at this moment, as we don't yet care if items are in DB or not.
+        /// Gets all the IDs of events from the database
+        /// </summary>
+        /// <returns>all IDs of events in DB</returns>
         public HashSet<string> SelectKnownIdsCommand()
         {
             HashSet<string> knownIds = new HashSet<string>();

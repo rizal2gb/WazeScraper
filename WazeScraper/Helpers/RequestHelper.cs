@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace WazeScraper
+namespace WazeScraper.Helpers
 {
     public static class RequestHelper
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using WazeScraper.Models;
 
-namespace WazeScraper
+namespace WazeScraper.Helpers
 {
     public static class JsonHelper
     {
