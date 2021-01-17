@@ -25,7 +25,7 @@
         #endregion
 
         #region SQL
-        public const string CS = @"server=88.119.198.18;userid=rent_AmSlab;password=password;database=rent_AmSlab";
+        public const string CS = @"server=192.168.1.180;userid=WazeScraper;password=xxxx;database=WazeScraper";
         public const string InsertQuery = "INSERT INTO `LT-police` (id, X, Y, Country, City, ReportRating, Confidence, Reliability, subtype, published) VALUES";
         public const string OnDuplicateQuery = "ON DUPLICATE KEY UPDATE ReportRating=values(ReportRating), Confidence=values(Confidence), Reliability=values(Reliability)";
 
