@@ -74,7 +74,7 @@ namespace WazeScraper
 
                         foreach (var alert in alerts)
                         {
-                            if (alert.Type == type)
+                            if (alert.Type == type && alert.Country == "LH")
                                 wantedAlerts.Add(alert);
                         }
                     }
