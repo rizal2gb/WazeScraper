@@ -40,11 +40,15 @@ namespace WazeScraper
                 await Task.Delay(15000); // waits 15 seconds
                 try
                 {
-                    var list = GetListOfAlertsByType(Constants.x_start, Constants.x_end, Constants.y_start, Constants.y_end, Constants.SearchedType);
+                    var list = await GetListOfAlertsByType(Constants.x_start, Constants.x_end, Constants.y_start, Constants.y_end, Constants.SearchedType);
                     if (list == null || list.Count == 0)
                         continue;
 
+                    var start_payload = DateTime.Now;
                     _apiClient.InsertPayloadCommand(list);
+                    var end_payload = DateTime.Now;
+
+                    Console.WriteLine($"[LOG] _apiClient.InsertPayloadCommand took: {end_payload - start_payload}");
                 }
                 catch (Exception e)
                 {
@@ -53,7 +57,7 @@ namespace WazeScraper
             }
         }
 
-        public List<WazeAlert> GetListOfAlertsByType(int x_start, int x_end, int y_start, int y_end, string type)
+        public async Task<List<WazeAlert>> GetListOfAlertsByType(int x_start, int x_end, int y_start, int y_end, string type)
         {
             Console.WriteLine("Starting Task...");
             var startTime = DateTime.Now;
@@ -66,8 +70,14 @@ namespace WazeScraper
                     var request = RequestHelper.CreateValidRequest(x, y, y + 1, x + 1);
                     try
                     {
-                        var response = _apiClient.Get(request);
+                        var start_time_try = DateTime.Now;
+                        var response = await _apiClient.GetAsync(request);
+                        var end_time_response = DateTime.Now;
                         var alerts = JsonHelper.DeserializeResponse(response);
+                        var end_time_alerts = DateTime.Now;
+
+                        Console.WriteLine($"[LOG] _apiclient.Get took:  {end_time_response - start_time_try}");
+                        Console.WriteLine($"[LOG] Json desializer took: {end_time_alerts - end_time_response}");
 
                         if (alerts == null || alerts.Count == 0)
                             continue;

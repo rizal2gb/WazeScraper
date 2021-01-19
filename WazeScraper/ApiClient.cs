@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using WazeScraper.Models;
 using WazeScraper.Utils;
 
@@ -12,15 +13,15 @@ namespace WazeScraper
     [AppScope(Scope.SingleInstance)]
     public class ApiClient
     {
-        public string Get(HttpWebRequest request)
+        public async Task<string> GetAsync(HttpWebRequest request)
         {
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
             using (Stream stream = response.GetResponseStream())
             using (StreamReader reader = new StreamReader(stream))
             {
-                return reader.ReadToEnd();
+                return await reader.ReadToEndAsync();
             }
         }
 
@@ -81,7 +82,6 @@ namespace WazeScraper
                 {
                     while (reader.Read())
                     {
-
                         knownIds.Add(reader["Id"].ToString());
                     }
                 }
