@@ -8,7 +8,7 @@ namespace WazeScraper.Helpers
     public static class RequestHelper
     {
         private static readonly HttpClient Client = new HttpClient();
-        // Not using this at this moment, but HttpWebRequests should be retired and HttpClient used.
+        // Not using this at this moment, but HttpWebRequests should be retired and HttpClient used
         public static void SetupDefaultClient()
         {
             Client.DefaultRequestHeaders.Host = Constants.WazeHost;
