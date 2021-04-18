@@ -22,6 +22,7 @@
         public const int y_start = 20;
         public const int y_end = 27;
         public const string SearchedType = "POLICE";
+        public const string CountryCode = "LH";
         #endregion
 
         #region SQL

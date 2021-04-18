@@ -1,39 +1,33 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace WazeScraper
 {
     class Program
     {
-        static ManualResetEvent _quitEvent = new ManualResetEvent(false);
+        private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
 
-        static void Main()
+        static async Task Main()
         {
             try
             {
                 Console.WriteLine("Starting...");
                 AutofacInitializer.Initialize();
                 var scraper = AutofacInitializer.GetInstance<Scraper>();
-                scraper.Start();
+                await scraper.Start();
 
                 Console.CancelKeyPress += (sender, eArgs) =>
                 {
-                    _quitEvent.Set();
+                    QuitEvent.Set();
                     eArgs.Cancel = true;
                 };
 
-                // kick off asynchronous stuff 
-
-                _quitEvent.WaitOne();
-
-                // cleanup/shutdown and quit
-
-
+                QuitEvent.WaitOne();
             }
             catch (Exception e)
             {
-                Console.WriteLine("this sucks");
-                Console.WriteLine(e);
+                Console.WriteLine($"Application has crashed, Exception: {e.Message}\n StackTrace: \n {e.StackTrace}");
             }
         }
     }

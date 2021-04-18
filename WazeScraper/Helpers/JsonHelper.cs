@@ -11,7 +11,9 @@ namespace WazeScraper.Helpers
             JObject rawJson = JObject.Parse(response);
             var alerts = rawJson["alerts"];
             if (alerts == null)
+            {
                 return null;
+            }
 
             var deserializedAlerts = new List<WazeAlert>();
             foreach (var alert in alerts)

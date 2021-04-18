@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using WazeScraper.Helpers;
 using WazeScraper.Models;
@@ -12,7 +13,11 @@ namespace WazeScraper
     {
         private readonly ApiClient _apiClient;
         private bool _runLoop;
+        private static readonly TimeSpan DefaultDelayTime = TimeSpan.FromSeconds(30);
+        private static readonly TimeSpan CrashDelayTime = TimeSpan.FromSeconds(60);
+        private TimeSpan _lastTaskTime = TimeSpan.Zero;
 
+        private TimeSpan DelayTime => DefaultDelayTime - _lastTaskTime;
         public bool IsRunning => _runLoop;
 
         public Scraper(ApiClient apiClient)
@@ -20,11 +25,27 @@ namespace WazeScraper
             _apiClient = apiClient;
         }
 
-        public void Start()
+        public async Task Start()
         {
             _runLoop = true;
             Console.WriteLine("Running...");
-            RunLoop();
+            try
+            {
+                await RunLoop();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                await Restart();
+            }
+        }
+
+
+        private async Task Restart()
+        {
+            Console.WriteLine($"Main Loop crashed, trying to restart in {CrashDelayTime} seconds");
+            await Task.Delay(CrashDelayTime);
+            await Start();
         }
 
         public void Stop()
@@ -32,17 +53,19 @@ namespace WazeScraper
             _runLoop = false;
         }
 
-        private async void RunLoop()
+        private async Task RunLoop()
         {
             while (_runLoop)
             {
-                Console.WriteLine("Delaying task for 15 seconds...");
-                await Task.Delay(15000); // waits 15 seconds
+                Console.WriteLine($"Delaying task for {DelayTime.TotalSeconds:F}s...");
+                await Task.Delay(DelayTime);
                 try
                 {
                     var list = GetListOfAlertsByType(Constants.x_start, Constants.x_end, Constants.y_start, Constants.y_end, Constants.SearchedType);
                     if (list == null || list.Count == 0)
+                    {
                         continue;
+                    }
 
                     _apiClient.InsertPayloadCommand(list);
                 }
@@ -66,16 +89,20 @@ namespace WazeScraper
                     var request = RequestHelper.CreateValidRequest(x, y, y + 1, x + 1);
                     try
                     {
-                        var response = _apiClient.Get(request);
-                        var alerts = JsonHelper.DeserializeResponse(response);
+                        var alerts = GetAlerts(request);
 
                         if (alerts == null || alerts.Count == 0)
-                            continue;
-
-                        foreach (var alert in alerts)
                         {
-                            if (alert.Type == type && alert.Country == "LH")
+                            continue;
+                        }
+
+                        for (var index = 0; index < alerts.Count; index++)
+                        {
+                            var alert = alerts[index];
+                            if (alert.Type == type && alert.Country == Constants.CountryCode)
+                            {
                                 wantedAlerts.Add(alert);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -86,10 +113,22 @@ namespace WazeScraper
                 }
             }
 
-            var endTime = DateTime.Now;
-            Console.WriteLine($"Task finished, it took: {endTime - startTime}");
+            _lastTaskTime = DateTime.Now - startTime;
+            Console.WriteLine($"Task finished, it took: {_lastTaskTime.TotalSeconds:F}s");
 
             return wantedAlerts;
+        }
+
+        private List<WazeAlert> GetAlerts(HttpWebRequest request)
+        {
+            var response = _apiClient.Get(request);
+            if (string.IsNullOrWhiteSpace(response))
+            {
+                return null;
+            }
+
+            var alerts = JsonHelper.DeserializeResponse(response);
+            return alerts;
         }
     }
 }
