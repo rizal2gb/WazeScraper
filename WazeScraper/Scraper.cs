@@ -17,7 +17,19 @@ namespace WazeScraper
         private static readonly TimeSpan CrashDelayTime = TimeSpan.FromSeconds(60);
         private TimeSpan _lastTaskTime = TimeSpan.Zero;
 
-        private TimeSpan DelayTime => DefaultDelayTime - _lastTaskTime;
+        private TimeSpan DelayTime
+        {
+            get
+            {
+                if (_lastTaskTime > DefaultDelayTime)
+                {
+                    return TimeSpan.Zero;
+                }
+
+                return DefaultDelayTime - _lastTaskTime;
+            }
+        }
+
         public bool IsRunning => _runLoop;
 
         public Scraper(ApiClient apiClient)
