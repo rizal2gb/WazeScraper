@@ -26,10 +26,14 @@
         #endregion
 
         #region SQL
-        public const string CS = @"server=192.168.1.180;userid=WazeScraper;password=xxxx;database=WazeScraper";
+        public const string ConnectionStringFormat = @"server={0};userid={1};password={2};database={3}";
         public const string InsertQuery = "INSERT INTO `LT-police` (id, X, Y, Country, City, ReportRating, Confidence, Reliability, subtype, published) VALUES";
         public const string OnDuplicateQuery = "ON DUPLICATE KEY UPDATE ReportRating=values(ReportRating), Confidence=values(Confidence), Reliability=values(Reliability)";
 
+        public const string ConnectionIpKey = "ScraperIp";
+        public const string ConnectionPasswordKey = "ScraperPassword";
+        public const string ConnectionUserKey = "ScraperUser";
+        public const string ConnectionDatabaseKey = "ScraperDatabase";
 
         #endregion
 
