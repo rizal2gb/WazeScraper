@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace WazeScraper
     public class Scraper
     {
         private readonly ApiClient _apiClient;
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private bool _runLoop;
         private static readonly TimeSpan DefaultDelayTime = TimeSpan.FromSeconds(30);
         private static readonly TimeSpan CrashDelayTime = TimeSpan.FromSeconds(60);
@@ -40,14 +42,14 @@ namespace WazeScraper
         public async Task Start()
         {
             _runLoop = true;
-            Console.WriteLine("Running...");
+            _logger.Info("Running...");
             try
             {
                 await RunLoop();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.Error(e);
                 await Restart();
             }
         }
@@ -55,7 +57,7 @@ namespace WazeScraper
 
         private async Task Restart()
         {
-            Console.WriteLine($"Main Loop crashed, trying to restart in {CrashDelayTime} seconds");
+            _logger.Info($"Main Loop crashed, trying to restart in {CrashDelayTime} seconds");
             await Task.Delay(CrashDelayTime);
             await Start();
         }
@@ -69,7 +71,7 @@ namespace WazeScraper
         {
             while (_runLoop)
             {
-                Console.WriteLine($"Delaying task for {DelayTime.TotalSeconds:F}s...");
+                _logger.Info($"Delaying task for {DelayTime.TotalSeconds:F}s...");
                 await Task.Delay(DelayTime);
                 try
                 {
@@ -83,14 +85,14 @@ namespace WazeScraper
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    _logger.Error(e);
                 }
             }
         }
 
         public List<WazeAlert> GetListOfAlertsByType(int x_start, int x_end, int y_start, int y_end, string type)
         {
-            Console.WriteLine("Starting Task...");
+            _logger.Info("Starting Task...");
             var startTime = DateTime.Now;
             List<WazeAlert> wantedAlerts = new List<WazeAlert>();
 
@@ -119,14 +121,14 @@ namespace WazeScraper
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        _logger.Error(e);
                         return null;
                     }
                 }
             }
 
             _lastTaskTime = DateTime.Now - startTime;
-            Console.WriteLine($"Task finished, it took: {_lastTaskTime.TotalSeconds:F}s");
+            _logger.Info($"Task finished, it took: {_lastTaskTime.TotalSeconds:F}s");
 
             return wantedAlerts;
         }

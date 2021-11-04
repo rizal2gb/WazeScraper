@@ -12,6 +12,15 @@ namespace WazeScraper
     [AppScope(Scope.SingleInstance)]
     public class ApiClient
     {
+        private readonly EnvironmentVariableGetter _environmentVariableGetter;
+        private string _connectionString;
+
+        public ApiClient(EnvironmentVariableGetter environmentVariableGetter)
+        {
+            _environmentVariableGetter = environmentVariableGetter;
+            GetConnectionString();
+        }
+
         public string Get(HttpWebRequest request)
         {
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
@@ -33,7 +42,7 @@ namespace WazeScraper
 
             var insertValues = new StringBuilder("");
             var size = alerts.Count;
-            await using var con = new MySqlConnection(Constants.CS);
+            await using var con = new MySqlConnection(GetConnectionString());
             await using var cmd = new MySqlCommand();
             for (int i = 0; i < size; i++)
             {
@@ -72,7 +81,7 @@ namespace WazeScraper
         public HashSet<string> SelectKnownIdsCommand()
         {
             HashSet<string> knownIds = new HashSet<string>();
-            using var con = new MySqlConnection(Constants.CS);
+            using var con = new MySqlConnection(GetConnectionString());
             try
             {
                 con.Open();
@@ -96,6 +105,21 @@ namespace WazeScraper
             {
                 con.Close();
             }
+        }
+
+        private string GetConnectionString()
+        {
+            if (!string.IsNullOrWhiteSpace(_connectionString))
+            {
+                return _connectionString;
+            }
+            _connectionString = string.Format(Constants.ConnectionStringFormat,
+                _environmentVariableGetter.GetConnectionIp(),
+                _environmentVariableGetter.GetConnectionUser(),
+                _environmentVariableGetter.GetConnectionPassword(),
+                _environmentVariableGetter.GetConnectionDatabase());
+
+            return _connectionString;
         }
     }
 }
