@@ -17,23 +17,19 @@ namespace WazeScraper
         {
             try
             {
+                AppDomain.CurrentDomain.ProcessExit += (o, e) => QuitEvent.Set();
+                AppDomain.CurrentDomain.UnhandledException += (sender, args) => LogException(args.ExceptionObject as Exception);
                 SetupLogger();
                 Logger.Info("Starting...");
                 AutofacInitializer.Initialize();
                 var scraper = AutofacInitializer.GetInstance<Scraper>();
                 await scraper.Start();
 
-                Console.CancelKeyPress += (sender, eArgs) =>
-                {
-                    QuitEvent.Set();
-                    eArgs.Cancel = true;
-                };
-
                 QuitEvent.WaitOne();
             }
             catch (Exception e)
             {
-                Logger.Info($"Application has crashed, Exception: {e.Message}\n StackTrace: \n {e.StackTrace}");
+                Logger.Fatal(e, "Application has crashed");
             }
         }
 
@@ -47,6 +43,16 @@ namespace WazeScraper
             };
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, consoleTarget, "*");
             LogManager.Configuration = config;
+        }
+
+        private static void LogException(Exception ex)
+        {
+            if (ex == null)
+            {
+                return;
+            }
+
+            Logger.Fatal(ex, "Unhandled exception occured");
         }
     }
 }
