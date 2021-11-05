@@ -39,7 +39,7 @@ jobs:
       run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
         
     - name: Publish
-      run: dotnet publish -c release -r ubuntu.20.04-x64 -o ${{ env.TAG }} --self-contained false
+      run: dotnet publish -c release -r ubuntu.20.04-x64 -o Upload/${{ env.TAG }} --self-contained false
       
     - name: SFTP Deploy
       uses: wangyucode/sftp-upload-action@v1.1
@@ -48,11 +48,11 @@ jobs:
         port: ${{secrets.SCRAPER_SSH_PORT}}
         username: ${{secrets.SCRAPER_SSH_USER}}
         password: ${{secrets.SCRAPER_PASSWORD}}
-        localDir: ${{ env.TAG }}
+        localDir: Upload/${{ env.TAG }}
         remoteDir: ${{ env.TAG }}
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
         name: ${{ env.TAG }}
-        path: ${{ env.TAG }}
+        path: Upload/${{ env.TAG }}
