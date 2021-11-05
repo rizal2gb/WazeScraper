@@ -34,11 +34,15 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    
+    - name: Get the tag name
+      run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        
     - name: Publish
-      run: dotnet publish -c release -r ubuntu.20.04-x64 -o ${GITHUB_REF/refs\/tags\//} --self-contained false
+      run: dotnet publish -c release -r ubuntu.20.04-x64 -o ${{ env.TAG }} --self-contained false
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: ${GITHUB_REF/refs\/tags\//}
-        path: ${GITHUB_REF/refs\/tags\//}
+        name: ${{ env.TAG }}
+        path: ${{ env.TAG }}
