@@ -2,7 +2,8 @@ name: .NET
 
 on:
   push:
-    branches: [ master ]
+    tags:
+    - '*'
 
 jobs:
   build:
@@ -34,10 +35,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Publish
-      run: dotnet publish -c release -r ubuntu.20.04-x64 -o Release --self-contained false
+      run: dotnet publish -c release -r ubuntu.20.04-x64 -o ${GITHUB_REF/refs\/tags\//} --self-contained false
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: Release
-        path: Release
+        name: ${GITHUB_REF/refs\/tags\//}
+        path: ${GITHUB_REF/refs\/tags\//}
