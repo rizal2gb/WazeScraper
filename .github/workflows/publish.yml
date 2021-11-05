@@ -48,7 +48,7 @@ jobs:
         port: ${{secrets.SCRAPER_SSH_PORT}}
         username: ${{secrets.SCRAPER_SSH_USER}}
         password: ${{secrets.SCRAPER_PASSWORD}}
-        localDir: Upload/${{ env.TAG }}
+        localDir: Upload
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
