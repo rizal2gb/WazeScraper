@@ -49,7 +49,6 @@ jobs:
         username: ${{secrets.SCRAPER_SSH_USER}}
         password: ${{secrets.SCRAPER_PASSWORD}}
         localDir: Upload/${{ env.TAG }}
-        remoteDir: ${{ env.TAG }}
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
