@@ -11,14 +11,14 @@ namespace WazeScraper.Utils
             {
                 return string.Empty;
             }
-            var keyValue = Environment.GetEnvironmentVariable(key, EnvironmentVariableTarget.User);
+            var keyValues = Environment.GetEnvironmentVariables();
 
-            if (string.IsNullOrWhiteSpace(keyValue))
+            if (!keyValues.Contains(key))
             {
                 return string.Empty;
             }
 
-            return keyValue;
+            return keyValues[key]?.ToString();
         }
 
         public string GetConnectionPassword()
