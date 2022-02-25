@@ -17,10 +17,10 @@
         #endregion
 
         #region Coordinates for LT search
-        public const int x_start = -6.431031774281445;
-        public const int x_end = -6.110772058488646;
-        public const int y_start = 106.56936486265545;
-        public const int y_end = 107.05668854559424;
+        public const int x_start = "-6.431031774281445";
+        public const int x_end = "-6.110772058488646";
+        public const int y_start = "106.56936486265545";
+        public const int y_end = "107.05668854559424";
         public const string SearchedType = "POLICE";
         public const string CountryCode = "ID";
         #endregion
