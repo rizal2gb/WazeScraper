@@ -17,12 +17,12 @@
         #endregion
 
         #region Coordinates for LT search
-        public const int x_start = 53;
-        public const int x_end = 56;
-        public const int y_start = 20;
-        public const int y_end = 27;
+        public const int x_start = -6.431031774281445;
+        public const int x_end = -6.110772058488646;
+        public const int y_start = 106.56936486265545;
+        public const int y_end = 107.05668854559424;
         public const string SearchedType = "POLICE";
-        public const string CountryCode = "LH";
+        public const string CountryCode = "ID";
         #endregion
 
         #region SQL
@@ -30,10 +30,10 @@
         public const string InsertQuery = "INSERT INTO `LT-police` (id, X, Y, Country, City, ReportRating, Confidence, Reliability, subtype, published) VALUES";
         public const string OnDuplicateQuery = "ON DUPLICATE KEY UPDATE ReportRating=values(ReportRating), Confidence=values(Confidence), Reliability=values(Reliability)";
 
-        public const string ConnectionIpKey = "ScraperIp";
-        public const string ConnectionPasswordKey = "ScraperPassword";
-        public const string ConnectionUserKey = "ScraperUser";
-        public const string ConnectionDatabaseKey = "ScraperDatabase";
+        public const string ConnectionIpKey = "127.0.0.1";
+        public const string ConnectionPasswordKey = "password";
+        public const string ConnectionUserKey = "admin";
+        public const string ConnectionDatabaseKey = "wazedb";
 
         #endregion
 
